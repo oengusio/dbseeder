@@ -110,6 +110,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			if ok {
 				m.selected = string(i)
+
+				tea.Cmd()
 			}
 		}
 	}
@@ -121,6 +123,13 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m Model) View() tea.View {
 	if m.selected != "" {
+		switch m.selected {
+		case "Marathons":
+			{
+
+			}
+		}
+
 		return tea.NewView(fmt.Sprintf("You selected: %s", m.selected))
 	}
 
