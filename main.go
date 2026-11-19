@@ -24,13 +24,12 @@ import (
 	"os"
 
 	tea "charm.land/bubbletea/v2"
-	mainmenu "oengus.net/dbseeder/v2/menus/main"
 )
 
 func main() {
 	fmt.Println("Ready to get steamy?")
 
-	p := tea.NewProgram(mainmenu.InitialModel())
+	p := tea.NewProgram(InitialModel())
 
 	if _, err := p.Run(); err != nil {
 		fmt.Printf("Alas, there's been an error: %v", err)

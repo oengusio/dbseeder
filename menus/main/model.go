@@ -111,7 +111,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if ok {
 				m.selected = string(i)
 
-				tea.Cmd()
+				//tea.Cmd()
 			}
 		}
 	}
