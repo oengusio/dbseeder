@@ -57,8 +57,13 @@ func (m RootView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			switch newViewName {
 			case views.Main:
 				m.ViewModel = mainmenu.InitialModel()
+				break
 			case views.Marathon:
 				m.ViewModel = marathonmenu.InitialModel()
+				break
+			case views.Submission:
+			case views.User:
+				break
 			}
 		}
 	}

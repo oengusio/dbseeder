@@ -34,6 +34,12 @@ type SwitchView struct {
 	To View
 }
 
+func NoopCmd() tea.Cmd {
+	return func() tea.Msg {
+		return nil
+	}
+}
+
 func CmdSwitchViewMsg(newVew View) tea.Cmd {
 	return func() tea.Msg {
 		return SwitchView{

@@ -27,9 +27,19 @@ import (
 	"oengus.net/dbseeder/v2/views"
 )
 
+type step int8
+
+const (
+	Root step = iota
+	Confirm
+	EnterUserId
+	EnterMarathonCount
+)
+
 type Model struct {
 	choices  list.Model
 	gangBang bool
+	step     step
 	styles   menus.GenericStyle
 }
 
@@ -72,6 +82,7 @@ func InitialModel() Model {
 		// what can we seed
 		choices:  itemList,
 		gangBang: false,
+		step:     Root,
 	}
 
 	m.updateStyles(true)
@@ -84,14 +95,10 @@ func (m Model) Init() tea.Cmd {
 	return nil
 }
 
-func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model) updateRootStep(msg tea.Msg) tea.Cmd {
 	switch msg := msg.(type) {
 
-	case tea.WindowSizeMsg:
-		m.choices.SetWidth(msg.Width)
-		return m, nil
-
-		// Is it a key press?
+	// Is it a key press?
 	case tea.KeyPressMsg:
 
 		// Cool, what was the actual key pressed?
@@ -99,22 +106,84 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 		// Go one menu "up"
 		case "ctrl+c", "q", "esc":
-			return m, views.CmdSwitchViewMsg(views.Main)
+			return views.CmdSwitchViewMsg(views.Main)
 
 			// The "enter" key and the space bar toggle the selected state
 			// for the item that the cursor is pointing at.
-			//case "enter", "space":
-			//    i, ok := m.choices.SelectedItem().(menus.Item)
-			//
-			//    if ok {
-			//        m.selected = string(i)
-			//
-			//        switch m.selected {
-			//        case "Marathons":
-			//            return m, views.CmdSwitchViewMsg(views.Marathon)
-			//        }
-			//    }
+		case "enter", "space":
+			i, ok := m.choices.SelectedItem().(menus.Item)
+
+			if ok {
+				m.gangBang = string(i) == "Create new user per marathon"
+
+				if m.gangBang {
+					m.step = EnterMarathonCount
+				} else {
+					m.step = EnterUserId
+				}
+			}
 		}
+	}
+
+	return nil
+}
+
+func (m *Model) updateUserIdStep(msg tea.Msg) tea.Cmd {
+	switch msg := msg.(type) {
+
+	// Is it a key press?
+	case tea.KeyPressMsg:
+
+		// Cool, what was the actual key pressed?
+		switch msg.String() {
+
+		// Go one menu "up"
+		case "ctrl+c", "q", "esc":
+			m.step = Root
+			break
+
+			// The "enter" key and the space bar toggle the selected state
+			// for the item that the cursor is pointing at.
+		case "enter", "space":
+			i, ok := m.choices.SelectedItem().(menus.Item)
+
+			if ok {
+				m.gangBang = string(i) == "Create new user per marathon"
+
+				if m.gangBang {
+					m.step = EnterMarathonCount
+				} else {
+					m.step = EnterUserId
+				}
+			}
+			break
+		}
+	}
+
+	return views.NoopCmd()
+}
+
+func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	switch msg := msg.(type) {
+
+	case tea.WindowSizeMsg:
+		m.choices.SetWidth(msg.Width)
+		return m, nil
+	}
+
+	var stepResult tea.Cmd
+
+	switch m.step {
+	case Root:
+		stepResult = m.updateRootStep(msg)
+		break
+	case EnterUserId:
+		stepResult = m.updateUserIdStep(msg)
+		break
+	}
+
+	if stepResult != nil {
+		return m, stepResult
 	}
 
 	var cmd tea.Cmd
@@ -123,16 +192,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m Model) View() tea.View {
-	//if m.selected != "" {
-	//	switch m.selected {
-	//	case "Marathons":
-	//		{
-	//
-	//		}
-	//	}
-	//
-	//	return tea.NewView(fmt.Sprintf("You selected: %s", m.selected))
-	//}
+	switch m.step {
+	case Root:
+		return tea.NewView("\n" + m.choices.View())
+	case Confirm:
+		return tea.NewView("Confirm step")
+	case EnterUserId:
+		return tea.NewView("Enter user id mode")
+	case EnterMarathonCount:
+		return tea.NewView("Entering marathon count step")
+	}
 
-	return tea.NewView("\n" + m.choices.View())
+	return tea.NewView("Failed orgasm 😔")
 }
