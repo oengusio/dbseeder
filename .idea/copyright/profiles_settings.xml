@@ -1,0 +1,7 @@
+<component name="CopyrightManager">
+  <settings default="dbseeder">
+    <module2copyright>
+      <element module="Project Files" copyright="dbseeder" />
+    </module2copyright>
+  </settings>
+</component>
