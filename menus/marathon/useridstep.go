@@ -20,12 +20,61 @@
 package marathonmenu
 
 import (
+	"fmt"
+	"strconv"
+
+	"charm.land/bubbles/v2/textinput"
 	tea "charm.land/bubbletea/v2"
-	"oengus.net/dbseeder/v2/menus"
+	"charm.land/lipgloss/v2"
 	"oengus.net/dbseeder/v2/views"
 )
 
+type UserIdModel struct {
+	textInput textinput.Model
+	init      bool
+	userId    int64
+}
+
+var userIdData UserIdModel
+
+func initialUserIdModel() UserIdModel {
+	ti := textinput.New()
+	ti.Placeholder = "69"
+	ti.SetVirtualCursor(false)
+	ti.Focus()
+	ti.CharLimit = 156
+	ti.SetWidth(20)
+
+	return UserIdModel{
+		textInput: ti,
+		init:      true,
+		userId:    -1,
+	}
+}
+
+func (m UserIdModel) headerView() string { return "Enter user id to make marathon admin\n" }
+func (m UserIdModel) footerView() string { return "\n(esc to quit)" }
+
+func (m UserIdModel) View() tea.View {
+	var c *tea.Cursor
+	if !m.textInput.VirtualCursor() {
+		c = m.textInput.Cursor()
+		c.Y += lipgloss.Height(m.headerView())
+	}
+
+	str := lipgloss.JoinVertical(lipgloss.Top, m.headerView(), m.textInput.View(), m.footerView())
+	//if m.quitting {
+	//	str += "\n"
+	//}
+
+	v := tea.NewView(str)
+	v.Cursor = c
+	return v
+
+}
+
 func (m *Model) updateUserIdStep(msg tea.Msg) tea.Cmd {
+
 	switch msg := msg.(type) {
 
 	// Is it a key press?
@@ -35,27 +84,37 @@ func (m *Model) updateUserIdStep(msg tea.Msg) tea.Cmd {
 		switch msg.String() {
 
 		// Go one menu "up"
-		case "ctrl+c", "q", "esc":
+		case "q", "esc":
 			m.step = Root
-			break
+			userIdData.init = false
+			return views.NoopCmd()
 
 			// The "enter" key and the space bar toggle the selected state
 			// for the item that the cursor is pointing at.
-		case "enter", "space":
-			i, ok := m.choices.SelectedItem().(menus.Item)
+		case "enter":
+			//userIdData.textInput.Value()
+			fmt.Println()
 
-			if ok {
-				m.gangBang = string(i) == "Create new user per marathon"
+			n, e := strconv.ParseInt(userIdData.textInput.Value(), 0, 64)
 
-				if m.gangBang {
-					m.step = EnterMarathonCount
-				} else {
-					m.step = EnterUserId
-				}
+			if e != nil {
+				return tea.Quit
 			}
+
+			userIdData.userId = n
+			m.step = Confirm
+
 			break
 		}
 	}
 
-	return views.NoopCmd()
+	var cmd tea.Cmd
+
+	userIdData.textInput, cmd = userIdData.textInput.Update(msg)
+
+	if cmd == nil {
+		cmd = views.NoopCmd()
+	}
+
+	return cmd
 }

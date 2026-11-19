@@ -20,10 +20,10 @@
 package marathonmenu
 
 import (
-    "charm.land/bubbles/v2/key"
-    "charm.land/bubbles/v2/list"
-    tea "charm.land/bubbletea/v2"
-    "oengus.net/dbseeder/v2/menus"
+	"charm.land/bubbles/v2/key"
+	"charm.land/bubbles/v2/list"
+	tea "charm.land/bubbletea/v2"
+	"oengus.net/dbseeder/v2/menus"
 )
 
 type step int8
@@ -129,7 +129,10 @@ func (m Model) View() tea.View {
 	case Confirm:
 		return tea.NewView("Confirm step")
 	case EnterUserId:
-		return tea.NewView("Enter user id mode")
+		if userIdData.init {
+			return userIdData.View()
+		}
+		return tea.NewView("user id mode loading")
 	case EnterMarathonCount:
 		return tea.NewView("Entering marathon count step")
 	}

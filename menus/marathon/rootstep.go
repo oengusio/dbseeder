@@ -50,6 +50,9 @@ func (m *Model) updateRootStep(msg tea.Msg) tea.Cmd {
 					m.step = EnterMarathonCount
 				} else {
 					m.step = EnterUserId
+					if !userIdData.init {
+						userIdData = initialUserIdModel()
+					}
 				}
 			}
 		}
