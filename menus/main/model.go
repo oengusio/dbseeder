@@ -20,12 +20,11 @@
 package mainmenu
 
 import (
-	"fmt"
-
 	"charm.land/bubbles/v2/key"
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 	"oengus.net/dbseeder/v2/menus"
+	"oengus.net/dbseeder/v2/views"
 )
 
 type Model struct {
@@ -111,7 +110,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if ok {
 				m.selected = string(i)
 
-				//tea.Cmd()
+				switch m.selected {
+				case "Marathons":
+					return m, views.CmdSwitchViewMsg(views.Marathon)
+				}
 			}
 		}
 	}
@@ -122,16 +124,16 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m Model) View() tea.View {
-	if m.selected != "" {
-		switch m.selected {
-		case "Marathons":
-			{
-
-			}
-		}
-
-		return tea.NewView(fmt.Sprintf("You selected: %s", m.selected))
-	}
+	//if m.selected != "" {
+	//	switch m.selected {
+	//	case "Marathons":
+	//		{
+	//
+	//		}
+	//	}
+	//
+	//	return tea.NewView(fmt.Sprintf("You selected: %s", m.selected))
+	//}
 
 	return tea.NewView("\n" + m.choices.View())
 }

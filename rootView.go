@@ -22,6 +22,7 @@ package main
 import (
 	tea "charm.land/bubbletea/v2"
 	mainmenu "oengus.net/dbseeder/v2/menus/main"
+	marathonmenu "oengus.net/dbseeder/v2/menus/marathon"
 	"oengus.net/dbseeder/v2/views"
 )
 
@@ -45,6 +46,22 @@ func (m RootView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	childModel, cmd := m.ViewModel.Update(msg)
 
 	m.ViewModel = childModel
+
+	if cmd != nil {
+		called := cmd()
+
+		switch called.(type) {
+		case views.SwitchView:
+			newViewName := called.(views.SwitchView).To
+			m.ViewName = newViewName
+			switch newViewName {
+			case views.Main:
+				m.ViewModel = mainmenu.InitialModel()
+			case views.Marathon:
+				m.ViewModel = marathonmenu.InitialModel()
+			}
+		}
+	}
 
 	return m, cmd
 }

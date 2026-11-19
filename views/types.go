@@ -19,6 +19,8 @@
 
 package views
 
+import tea "charm.land/bubbletea/v2"
+
 type View int64
 
 const (
@@ -27,3 +29,15 @@ const (
 	Submission
 	User
 )
+
+type SwitchView struct {
+	To View
+}
+
+func CmdSwitchViewMsg(newVew View) tea.Cmd {
+	return func() tea.Msg {
+		return SwitchView{
+			To: newVew,
+		}
+	}
+}
