@@ -20,11 +20,10 @@
 package marathonmenu
 
 import (
-	"charm.land/bubbles/v2/key"
-	"charm.land/bubbles/v2/list"
-	tea "charm.land/bubbletea/v2"
-	"oengus.net/dbseeder/v2/menus"
-	"oengus.net/dbseeder/v2/views"
+    "charm.land/bubbles/v2/key"
+    "charm.land/bubbles/v2/list"
+    tea "charm.land/bubbletea/v2"
+    "oengus.net/dbseeder/v2/menus"
 )
 
 type step int8
@@ -93,74 +92,6 @@ func InitialModel() Model {
 func (m Model) Init() tea.Cmd {
 	// Just return `nil`, which means "no I/O right now, please."
 	return nil
-}
-
-func (m *Model) updateRootStep(msg tea.Msg) tea.Cmd {
-	switch msg := msg.(type) {
-
-	// Is it a key press?
-	case tea.KeyPressMsg:
-
-		// Cool, what was the actual key pressed?
-		switch msg.String() {
-
-		// Go one menu "up"
-		case "ctrl+c", "q", "esc":
-			return views.CmdSwitchViewMsg(views.Main)
-
-			// The "enter" key and the space bar toggle the selected state
-			// for the item that the cursor is pointing at.
-		case "enter", "space":
-			i, ok := m.choices.SelectedItem().(menus.Item)
-
-			if ok {
-				m.gangBang = string(i) == "Create new user per marathon"
-
-				if m.gangBang {
-					m.step = EnterMarathonCount
-				} else {
-					m.step = EnterUserId
-				}
-			}
-		}
-	}
-
-	return nil
-}
-
-func (m *Model) updateUserIdStep(msg tea.Msg) tea.Cmd {
-	switch msg := msg.(type) {
-
-	// Is it a key press?
-	case tea.KeyPressMsg:
-
-		// Cool, what was the actual key pressed?
-		switch msg.String() {
-
-		// Go one menu "up"
-		case "ctrl+c", "q", "esc":
-			m.step = Root
-			break
-
-			// The "enter" key and the space bar toggle the selected state
-			// for the item that the cursor is pointing at.
-		case "enter", "space":
-			i, ok := m.choices.SelectedItem().(menus.Item)
-
-			if ok {
-				m.gangBang = string(i) == "Create new user per marathon"
-
-				if m.gangBang {
-					m.step = EnterMarathonCount
-				} else {
-					m.step = EnterUserId
-				}
-			}
-			break
-		}
-	}
-
-	return views.NoopCmd()
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
