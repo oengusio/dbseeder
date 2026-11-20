@@ -21,6 +21,8 @@
 package marathonmenu
 
 import (
+	"strconv"
+
 	"charm.land/bubbles/v2/textinput"
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
@@ -37,7 +39,7 @@ var marathonCountData MarathonCountModel
 
 func initialMarathonCountModel() MarathonCountModel {
 	ti := textinput.New()
-	ti.Placeholder = "20"
+	ti.Placeholder = "69"
 	ti.SetVirtualCursor(false)
 	ti.Focus()
 	ti.CharLimit = 156
@@ -46,11 +48,11 @@ func initialMarathonCountModel() MarathonCountModel {
 	return MarathonCountModel{
 		textInput: ti,
 		init:      true,
-		count:     20,
+		count:     69,
 	}
 }
 
-func (m MarathonCountModel) headerView() string { return "Enter marathon count, defaults to 20\n" }
+func (m MarathonCountModel) headerView() string { return "Enter marathon count, defaults to 69\n" }
 func (m MarathonCountModel) footerView() string { return "\n(esc to quit)" }
 
 func (m MarathonCountModel) View() tea.View {
@@ -72,7 +74,6 @@ func (m MarathonCountModel) View() tea.View {
 }
 
 func (m *Model) updateMarathonCountStep(msg tea.Msg) tea.Cmd {
-
 	switch msg := msg.(type) {
 
 	// Is it a key press?
@@ -87,23 +88,37 @@ func (m *Model) updateMarathonCountStep(msg tea.Msg) tea.Cmd {
 			marathonCountData.init = false
 			return views.NoopCmd()
 
-			/*case "enter":
-			  //userIdData.textInput.Value()
-			  //fmt.Println()
+		case "enter":
+			textVal := marathonCountData.textInput.Value()
 
-			  n, e := strconv.ParseInt(userIdData.textInput.Value(), 0, 64)
+			if textVal == "" {
+				textVal = "69"
+			}
 
-			  if e != nil || n < 1 {
-			      break
-			      //return tea.Quit
-			  }
+			n, e := strconv.ParseInt(textVal, 0, 64)
 
-			  userIdData.userId = n
-			  m.SetStep(EnterMarathonCount)
+			if e != nil || n < 1 {
+				break
+				//return tea.Quit
+			}
 
-			  return views.NoopCmd()*/
+			marathonCountData.count = n
+			m.SetStep(Confirm)
+
+			return views.NoopCmd()
 		}
 	}
 
-	return views.NoopCmd()
+	var cmd tea.Cmd
+
+	marathonCountData.textInput, cmd = marathonCountData.textInput.Update(msg)
+
+	// since this isn't bdsm (although we are using regex) let's set up a little guard to prevent being blue balled.
+	marathonCountData.textInput.SetValue(preventBlueBalling(marathonCountData.textInput.Value()))
+
+	if cmd == nil {
+		cmd = views.NoopCmd()
+	}
+
+	return cmd
 }

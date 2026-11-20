@@ -21,6 +21,8 @@
 package marathonmenu
 
 import (
+	"fmt"
+
 	"charm.land/bubbles/v2/key"
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
@@ -165,7 +167,23 @@ func (m Model) View() tea.View {
 	case Root:
 		return tea.NewView("\n" + m.choices.View())
 	case Confirm:
-		return tea.NewView("Confirm step")
+		s := "Consent is sexy:\n\n"
+
+		if m.gangBang {
+			s += "You're creating a massive gangbang of "
+		}
+
+		if userIdData.init {
+			s += fmt.Sprintf("User with id %d will be bukkaked with ", userIdData.userId)
+		}
+
+		if marathonCountData.init {
+			s += fmt.Sprintf("%d marathons\n", marathonCountData.count)
+		} else {
+			s += "nobody?"
+		}
+
+		return tea.NewView(s)
 	case EnterUserId:
 		if userIdData.init {
 			return userIdData.View()

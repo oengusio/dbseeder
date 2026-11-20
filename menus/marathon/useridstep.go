@@ -75,10 +75,16 @@ func (m UserIdModel) View() tea.View {
 }
 
 // anything other than a postive number we consider blue balling
-var blueBallRegex = regexp.MustCompile(`[^1-9]+`)
+var blueBallRegex = regexp.MustCompile(`([1-9][0-9]*)`)
 
 func preventBlueBalling(input string) string {
-	return blueBallRegex.ReplaceAllString(input, "")
+	match := blueBallRegex.FindStringSubmatch(input)
+
+	if len(match) < 2 {
+		return ""
+	}
+
+	return match[1]
 }
 
 func (m *Model) updateUserIdStep(msg tea.Msg) tea.Cmd {
