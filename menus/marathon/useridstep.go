@@ -93,7 +93,7 @@ func (m *Model) updateUserIdStep(msg tea.Msg) tea.Cmd {
 
 		// Go one menu "up"
 		case "q", "esc":
-			m.step = Root
+			m.PreviousStep()
 			userIdData.init = false
 			return views.NoopCmd()
 
@@ -109,8 +109,7 @@ func (m *Model) updateUserIdStep(msg tea.Msg) tea.Cmd {
 			}
 
 			userIdData.userId = n
-			m.step = EnterMarathonCount
-
+			m.SetStep(EnterMarathonCount)
 			return views.NoopCmd()
 		}
 	}

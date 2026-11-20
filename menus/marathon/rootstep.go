@@ -48,12 +48,9 @@ func (m *Model) updateRootStep(msg tea.Msg) tea.Cmd {
 				m.gangBang = string(i) == "Create new user per marathon"
 
 				if m.gangBang {
-					m.step = EnterMarathonCount
+					m.SetStep(EnterMarathonCount)
 				} else {
-					m.step = EnterUserId
-					if !userIdData.init {
-						userIdData = initialUserIdModel()
-					}
+					m.SetStep(EnterUserId)
 				}
 			}
 		}

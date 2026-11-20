@@ -25,6 +25,7 @@ import (
 	"charm.land/bubbles/v2/list"
 	tea "charm.land/bubbletea/v2"
 	"oengus.net/dbseeder/v2/menus"
+	"oengus.net/dbseeder/v2/queue"
 )
 
 type step int8
@@ -37,10 +38,11 @@ const (
 )
 
 type Model struct {
-	choices  list.Model
-	gangBang bool
-	step     step
-	styles   menus.GenericStyle
+	choices      list.Model
+	gangBang     bool
+	previousStep *queue.Queue
+	step         step
+	styles       menus.GenericStyle
 }
 
 func (m *Model) updateStyles(isDark bool) {
@@ -80,9 +82,10 @@ func InitialModel() Model {
 
 	m := Model{
 		// what can we seed
-		choices:  itemList,
-		gangBang: false,
-		step:     Root,
+		choices:      itemList,
+		gangBang:     false,
+		previousStep: queue.New(),
+		step:         Root,
 	}
 
 	m.updateStyles(true)
@@ -93,6 +96,37 @@ func InitialModel() Model {
 func (m Model) Init() tea.Cmd {
 	// Just return `nil`, which means "no I/O right now, please."
 	return nil
+}
+
+func (m *Model) SetStep(step step) {
+	m.previousStep.Push(m.step)
+	m.step = step
+
+	switch step {
+	case EnterMarathonCount:
+		if !marathonCountData.init {
+			marathonCountData = initialMarathonCountModel()
+		}
+		break
+	case EnterUserId:
+		if !userIdData.init {
+			userIdData = initialUserIdModel()
+		}
+		break
+	default:
+		// noop
+		break
+	}
+}
+
+func (m *Model) PreviousStep() {
+	prev := m.previousStep.Pop()
+
+	if prev == nil {
+		m.step = Root
+	} else {
+		m.step = prev.(step)
+	}
 }
 
 func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -111,6 +145,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		break
 	case EnterUserId:
 		stepResult = m.updateUserIdStep(msg)
+		break
+	case EnterMarathonCount:
+		stepResult = m.updateMarathonCountStep(msg)
 		break
 	}
 
@@ -135,7 +172,10 @@ func (m Model) View() tea.View {
 		}
 		return tea.NewView("user id mode loading")
 	case EnterMarathonCount:
-		return tea.NewView("Entering marathon count step")
+		if marathonCountData.init {
+			return marathonCountData.View()
+		}
+		return tea.NewView("Marathon count step UI loading")
 	}
 
 	return tea.NewView("Failed orgasm 😔")
