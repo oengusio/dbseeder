@@ -1,5 +1,6 @@
 /*
  *     Yummy seed for the database 😋
+ *     Copyright (C) 2026 DHG Media
  *     Copyright (C) 2026 duncte123
  *
  *     This program is free software: you can redistribute it and/or modify
