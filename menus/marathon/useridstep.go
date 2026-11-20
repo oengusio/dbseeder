@@ -21,7 +21,6 @@
 package marathonmenu
 
 import (
-	"fmt"
 	"regexp"
 	"strconv"
 
@@ -100,18 +99,19 @@ func (m *Model) updateUserIdStep(msg tea.Msg) tea.Cmd {
 
 		case "enter":
 			//userIdData.textInput.Value()
-			fmt.Println()
+			//fmt.Println()
 
 			n, e := strconv.ParseInt(userIdData.textInput.Value(), 0, 64)
 
-			if e != nil {
-				return tea.Quit
+			if e != nil || n < 1 {
+				break
+				//return tea.Quit
 			}
 
 			userIdData.userId = n
-			m.step = Confirm
+			m.step = EnterMarathonCount
 
-			break
+			return views.NoopCmd()
 		}
 	}
 
