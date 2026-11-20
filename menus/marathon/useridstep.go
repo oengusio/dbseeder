@@ -21,6 +21,7 @@ package marathonmenu
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 
 	"charm.land/bubbles/v2/textinput"
@@ -73,6 +74,13 @@ func (m UserIdModel) View() tea.View {
 
 }
 
+// anything other than a postive number we consider blue balling
+var blueBallRegex = regexp.MustCompile(`[^1-9]+`)
+
+func preventBlueBalling(input string) string {
+	return blueBallRegex.ReplaceAllString(input, "")
+}
+
 func (m *Model) updateUserIdStep(msg tea.Msg) tea.Cmd {
 
 	switch msg := msg.(type) {
@@ -89,8 +97,6 @@ func (m *Model) updateUserIdStep(msg tea.Msg) tea.Cmd {
 			userIdData.init = false
 			return views.NoopCmd()
 
-			// The "enter" key and the space bar toggle the selected state
-			// for the item that the cursor is pointing at.
 		case "enter":
 			//userIdData.textInput.Value()
 			fmt.Println()
@@ -111,6 +117,9 @@ func (m *Model) updateUserIdStep(msg tea.Msg) tea.Cmd {
 	var cmd tea.Cmd
 
 	userIdData.textInput, cmd = userIdData.textInput.Update(msg)
+
+	// since this isn't bdsm (although we are using regex) let's set up a little guard to prevent being blue balled.
+	userIdData.textInput.SetValue(preventBlueBalling(userIdData.textInput.Value()))
 
 	if cmd == nil {
 		cmd = views.NoopCmd()
