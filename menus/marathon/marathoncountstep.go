@@ -53,7 +53,7 @@ func initialMarathonCountModel() MarathonCountModel {
 }
 
 func (m MarathonCountModel) headerView() string { return "Enter marathon count, defaults to 69\n" }
-func (m MarathonCountModel) footerView() string { return "\n(esc to quit)" }
+func (m MarathonCountModel) footerView() string { return "\n(esc to go back)" }
 
 func (m MarathonCountModel) View() tea.View {
 	var c *tea.Cursor

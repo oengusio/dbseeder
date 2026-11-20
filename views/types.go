@@ -41,7 +41,7 @@ func NoopCmd() tea.Cmd {
 	}
 }
 
-func CmdSwitchViewMsg(newVew View) tea.Cmd {
+func SwitchToCmd(newVew View) tea.Cmd {
 	return func() tea.Msg {
 		return SwitchView{
 			To: newVew,

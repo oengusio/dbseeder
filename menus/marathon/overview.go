@@ -151,6 +151,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case EnterMarathonCount:
 		stepResult = m.updateMarathonCountStep(msg)
 		break
+	case Confirm:
+		stepResult = m.updateConsentStep(msg)
+		break
 	}
 
 	if stepResult != nil {

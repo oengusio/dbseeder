@@ -37,7 +37,7 @@ func (m *Model) updateRootStep(msg tea.Msg) tea.Cmd {
 
 		// Go one menu "up"
 		case "ctrl+c", "q", "esc":
-			return views.CmdSwitchViewMsg(views.Main)
+			return views.SwitchToCmd(views.Main)
 
 			// The "enter" key and the space bar toggle the selected state
 			// for the item that the cursor is pointing at.

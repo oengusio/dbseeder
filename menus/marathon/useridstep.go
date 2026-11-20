@@ -54,7 +54,7 @@ func initialUserIdModel() UserIdModel {
 }
 
 func (m UserIdModel) headerView() string { return "Enter user id to make marathon admin\n" }
-func (m UserIdModel) footerView() string { return "\n(esc to quit)" }
+func (m UserIdModel) footerView() string { return "\n(esc to hold off edging)" }
 
 func (m UserIdModel) View() tea.View {
 	var c *tea.Cursor

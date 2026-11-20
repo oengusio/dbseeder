@@ -50,7 +50,7 @@ func InitialModel() Model {
 	}
 
 	itemList := list.New(items, menus.ItemDelegate{}, menus.DefaultWidth, max(len(items), menus.DefaultHeight))
-	itemList.Title = "What to seed?"
+	itemList.Title = "What spray your seed on?"
 	itemList.SetShowStatusBar(false)
 	itemList.SetFilteringEnabled(false)
 	itemList.SetShowHelp(true)
@@ -113,7 +113,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 				switch m.selected {
 				case "Marathons":
-					return m, views.CmdSwitchViewMsg(views.Marathon)
+					return m, views.SwitchToCmd(views.Marathon)
 				}
 			}
 		}
@@ -125,16 +125,5 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m Model) View() tea.View {
-	//if m.selected != "" {
-	//	switch m.selected {
-	//	case "Marathons":
-	//		{
-	//
-	//		}
-	//	}
-	//
-	//	return tea.NewView(fmt.Sprintf("You selected: %s", m.selected))
-	//}
-
 	return tea.NewView("\n" + m.choices.View())
 }

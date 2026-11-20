@@ -32,9 +32,9 @@ func (self *Queue) Pop() interface{} {
 	h := *self
 	var el interface{}
 	l := len(h)
-	el, *self = h[0], h[1:l]
+	//el, *self = h[0], h[1:l]
 	// Or use this instead for a Stack
-	// el, *self = h[l-1], h[0:l-1]
+	el, *self = h[l-1], h[0:l-1]
 	return el
 }
 
