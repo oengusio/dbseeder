@@ -30,7 +30,7 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
-const DefaultWidth = 20
+const DefaultWidth = 30
 const DefaultHeight = 10
 
 type GenericStyle struct {
