@@ -41,6 +41,40 @@ type Marathon struct {
 	// MaxCategoriesPerGame
 	HasMultiplayer bool
 	// MaxNumberOfScreens
+	Twitch string
+	// Twitter string
+	Discord        string
+	Country        string
+	DiscordPrivacy bool
+	SubmitsOpen    bool
+	// DefaultSetupTIme bigint
+	IsSelectionDone    bool
+	ScheduleDone       bool
+	IsPrivate          bool
+	Incentives         bool
+	CanEditSubmissions bool
+	HasDonations       bool
+	// DonationPayee string
+	// DonationCurrencyIso string
+	// SupportedCharity string
+	// Cleared bool
+	// Webhook string
+	DonationOpen        bool
+	VideoRequired       bool
+	UnlimitedGames      bool
+	UnlimitedCategories bool
+	EmulatorAuthorized  bool
+	Youtube             string
+	// TODO: SubmissionsStartDate
+	// TODO: SubmissionsEndDate
+	// DiscordGuildId string
+	// DiscordGuildName string
+	// DiscordRequired bool
+	// AnnounceAcceptedSubmissions bool
+	// VolunteerApplicationsOpen bool
+	// UserInfoHidden string ????
+	// Mastodon string
+	// Bluesky string
 }
 
 func MakeMarathon() Marathon {
@@ -51,13 +85,30 @@ func MakeMarathon() Marathon {
 		strings.Join(fake.Lorem().Words(fake.IntBetween(1, 3)), " "),
 	)
 
+	submits := fake.Bool()
+
 	return Marathon{
-		Id:             fake.RandomStringWithLength(10),                              // Always max girth to prevent duplicates.
-		Name:           strings.Join(fake.Lorem().Words(fake.IntBetween(1, 3)), " "), // TODO: limit 40 chars
-		Description:    fake.Lorem().Paragraph(10),
-		IsOnsite:       fake.Bool(),
-		Location:       fake.Address().Address(),
-		Language:       fake.Language().LanguageAbbr(),
-		HasMultiplayer: fake.Bool(),
+		Id:                  fake.RandomStringWithLength(10),                              // Always max girth to prevent duplicates.
+		Name:                strings.Join(fake.Lorem().Words(fake.IntBetween(1, 3)), " "), // TODO: limit 40 chars
+		Description:         fake.Lorem().Paragraph(10),
+		IsOnsite:            fake.Bool(),
+		Location:            fake.Address().Address(),
+		Language:            fake.Language().LanguageAbbr(),
+		HasMultiplayer:      fake.Bool(),
+		Country:             fake.Address().CountryAbbr(),
+		DiscordPrivacy:      fake.Bool(),
+		SubmitsOpen:         submits,
+		IsSelectionDone:     false,
+		ScheduleDone:        false,
+		IsPrivate:           fake.Bool(),
+		Incentives:          false,
+		CanEditSubmissions:  submits,
+		HasDonations:        false,
+		DonationOpen:        false,
+		VideoRequired:       fake.Bool(),
+		UnlimitedGames:      fake.Bool(),
+		UnlimitedCategories: fake.Bool(),
+		EmulatorAuthorized:  fake.Bool(),
+		Youtube:             fake.YouTube().GenerateFullURL(),
 	}
 }

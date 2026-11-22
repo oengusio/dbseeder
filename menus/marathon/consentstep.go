@@ -21,6 +21,8 @@
 package marathonmenu
 
 import (
+	"fmt"
+
 	tea "charm.land/bubbletea/v2"
 	"oengus.net/dbseeder/v2/views"
 )
@@ -46,4 +48,24 @@ func (m *Model) updateConsentStep(msg tea.Msg) tea.Cmd {
 		}
 	}
 	return nil
+}
+
+func (m Model) AskForConsent() tea.View {
+	s := "Consent is sexy:\n\n"
+
+	if m.gangBang {
+		s += "You're creating a massive gangbang of "
+	}
+
+	if userIdData.init {
+		s += fmt.Sprintf("User with id %d will be bukkaked with ", userIdData.userId)
+	}
+
+	if marathonCountData.init {
+		s += fmt.Sprintf("%d marathons\n", marathonCountData.count)
+	} else {
+		s += "nobody?"
+	}
+
+	return tea.NewView(s)
 }
