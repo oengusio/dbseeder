@@ -33,7 +33,7 @@ import (
 type UserIdModel struct {
 	textInput textinput.Model
 	init      bool
-	userId    int64
+	userId    int
 }
 
 var userIdData UserIdModel
@@ -107,7 +107,7 @@ func (m *Model) updateUserIdStep(msg tea.Msg) tea.Cmd {
 			//userIdData.textInput.Value()
 			//fmt.Println()
 
-			n, e := strconv.ParseInt(userIdData.textInput.Value(), 0, 64)
+			n, e := strconv.Atoi(userIdData.textInput.Value())
 
 			if e != nil || n < 1 {
 				break

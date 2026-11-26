@@ -21,7 +21,6 @@
 package entities
 
 import (
-	"fmt"
 	"strings"
 	"time"
 
@@ -78,40 +77,37 @@ type Marathon struct {
 	// Bluesky string
 }
 
-func MakeMarathon() Marathon {
+func BirthMarathon() Marathon {
 	fake := faker.New()
-
-	fmt.Println(
-		"name",
-		strings.Join(fake.Lorem().Words(fake.IntBetween(1, 3)), " "),
-	)
-
 	submits := fake.Bool()
+	dur, _ := time.ParseDuration("10d")
 
 	return Marathon{
-		Id:                  fake.RandomStringWithLength(10),                              // Always max girth to prevent duplicates.
-		Name:                strings.Join(fake.Lorem().Words(fake.IntBetween(1, 3)), " "), // TODO: limit 40 chars
-		StartDate:           fake.Time().Past(),
-		EndDate:             fake.Time().Future(),
-		Description:         fake.Lorem().Paragraph(10),
-		IsOnsite:            fake.Bool(),
-		Location:            fake.Address().Address(),
-		Language:            fake.Language().LanguageAbbr(),
-		HasMultiplayer:      fake.Bool(),
-		Country:             fake.Address().CountryAbbr(),
-		DiscordPrivacy:      fake.Bool(),
-		SubmitsOpen:         submits,
-		IsSelectionDone:     false,
-		ScheduleDone:        false,
-		IsPrivate:           fake.Bool(),
-		Incentives:          false,
-		CanEditSubmissions:  submits,
-		HasDonations:        false,
-		DonationOpen:        false,
-		VideoRequired:       fake.Bool(),
-		UnlimitedGames:      fake.Bool(),
-		UnlimitedCategories: fake.Bool(),
-		EmulatorAuthorized:  fake.Bool(),
-		Youtube:             fake.YouTube().GenerateFullURL(),
+		Id:                   fake.RandomStringWithLength(10),                              // Always max girth to prevent duplicates.
+		Name:                 strings.Join(fake.Lorem().Words(fake.IntBetween(1, 3)), " "), // TODO: limit 40 chars
+		StartDate:            fake.Time().Past(),
+		EndDate:              fake.Time().Future(),
+		Description:          fake.Lorem().Paragraph(10),
+		IsOnsite:             fake.Bool(),
+		Location:             fake.Address().Address(),
+		Language:             fake.Language().LanguageAbbr(),
+		HasMultiplayer:       fake.Bool(),
+		Country:              fake.Address().CountryAbbr(),
+		DiscordPrivacy:       fake.Bool(),
+		SubmitsOpen:          submits,
+		IsSelectionDone:      false,
+		ScheduleDone:         false,
+		IsPrivate:            fake.Bool(),
+		Incentives:           false,
+		CanEditSubmissions:   submits,
+		HasDonations:         false,
+		DonationOpen:         false,
+		VideoRequired:        fake.Bool(),
+		UnlimitedGames:       fake.Bool(),
+		UnlimitedCategories:  fake.Bool(),
+		EmulatorAuthorized:   fake.Bool(),
+		Youtube:              fake.YouTube().GenerateFullURL(),
+		SubmissionsStartDate: fake.Time().Future(),
+		SubmissionsEndDate:   fake.Time().Future().Add(dur),
 	}
 }

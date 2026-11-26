@@ -22,8 +22,11 @@ package marathonmenu
 
 import (
 	"fmt"
+	"os"
 
 	tea "charm.land/bubbletea/v2"
+	"oengus.net/dbseeder/v2/database"
+	"oengus.net/dbseeder/v2/entities"
 	"oengus.net/dbseeder/v2/views"
 )
 
@@ -44,7 +47,20 @@ func (m *Model) updateConsentStep(msg tea.Msg) tea.Cmd {
 			// The "enter" key and the space bar toggle the selected state
 			// for the item that the cursor is pointing at.
 		case "enter":
-			// TODO: continue with entered settings
+			fmt.Println("Creating marathons")
+			marathons := make([]entities.Marathon, marathonCountData.count)
+			for i := 0; i < marathonCountData.count; i++ {
+				marathons[i] = entities.BirthMarathon()
+				if userIdData.init {
+					marathons[i].CreatorId = userIdData.userId
+				}
+			}
+
+			database.SprayMarathons(marathons)
+
+			fmt.Println("Marathons done")
+
+			os.Exit(0)
 		}
 	}
 	return nil

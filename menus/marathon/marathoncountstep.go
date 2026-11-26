@@ -32,7 +32,7 @@ import (
 type MarathonCountModel struct {
 	textInput textinput.Model
 	init      bool
-	count     int64
+	count     int
 }
 
 var marathonCountData MarathonCountModel
@@ -95,7 +95,7 @@ func (m *Model) updateMarathonCountStep(msg tea.Msg) tea.Cmd {
 				textVal = "69"
 			}
 
-			n, e := strconv.ParseInt(textVal, 0, 64)
+			n, e := strconv.Atoi(textVal)
 
 			if e != nil || n < 1 {
 				break
