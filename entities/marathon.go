@@ -23,16 +23,17 @@ package entities
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/jaswdr/faker/v2"
 )
 
 type Marathon struct {
-	Id        string
-	Name      string
-	CreatorId int
-	// TODO: StartDate
-	// TODO: EndDate
+	Id          string
+	Name        string
+	CreatorId   int
+	StartDate   time.Time
+	EndDate     time.Time
 	Description string
 	IsOnsite    bool
 	Location    string
@@ -59,14 +60,14 @@ type Marathon struct {
 	// SupportedCharity string
 	// Cleared bool
 	// Webhook string
-	DonationOpen        bool
-	VideoRequired       bool
-	UnlimitedGames      bool
-	UnlimitedCategories bool
-	EmulatorAuthorized  bool
-	Youtube             string
-	// TODO: SubmissionsStartDate
-	// TODO: SubmissionsEndDate
+	DonationOpen         bool
+	VideoRequired        bool
+	UnlimitedGames       bool
+	UnlimitedCategories  bool
+	EmulatorAuthorized   bool
+	Youtube              string
+	SubmissionsStartDate time.Time
+	SubmissionsEndDate   time.Time
 	// DiscordGuildId string
 	// DiscordGuildName string
 	// DiscordRequired bool
@@ -90,6 +91,8 @@ func MakeMarathon() Marathon {
 	return Marathon{
 		Id:                  fake.RandomStringWithLength(10),                              // Always max girth to prevent duplicates.
 		Name:                strings.Join(fake.Lorem().Words(fake.IntBetween(1, 3)), " "), // TODO: limit 40 chars
+		StartDate:           fake.Time().Past(),
+		EndDate:             fake.Time().Future(),
 		Description:         fake.Lorem().Paragraph(10),
 		IsOnsite:            fake.Bool(),
 		Location:            fake.Address().Address(),

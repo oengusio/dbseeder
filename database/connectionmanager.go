@@ -26,6 +26,7 @@ import (
 	"os"
 
 	"github.com/jackc/pgx/v5"
+	"oengus.net/dbseeder/v2/entities"
 )
 
 var connection *pgx.Conn
@@ -35,7 +36,9 @@ func getDbConnection() *pgx.Conn {
 		return connection
 	}
 
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	//conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+	// Hardcoding urls in compiled code is the safest option as then a threat actor cannot find it inside your environment.
+	conn, err := pgx.Connect(context.Background(), "postgresql://duncte123:password@localhost:5432/oengus")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		os.Exit(1)
@@ -44,6 +47,49 @@ func getDbConnection() *pgx.Conn {
 	connection = conn
 
 	return conn
+}
+
+func SprayMarathons(marathons []entities.Marathon) {
+	for _, marathon := range marathons {
+		go SquirtMarathon(marathon)
+	}
+}
+
+func SquirtMarathon(marathon entities.Marathon) {
+	conn := getDbConnection()
+	defer closeConnection()
+
+	query := "INSERT INTO marathon(id, name, creator_id, start_date, end_date, description, is_onsite, location, language) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
+	_, err := conn.Exec(
+		context.Background(),
+		query,
+		marathon.Id,
+		marathon.Name,
+		marathon.CreatorId,
+		marathon.StartDate,
+		marathon.EndDate,
+		marathon.IsOnsite,
+		marathon.Location,
+		marathon.Language,
+	)
+
+	if err != nil {
+		fmt.Printf("Impregnation of marathon failed (%s): %v", query, err)
+		os.Exit(1)
+	}
+}
+
+func impregnate(query string) {
+	conn := getDbConnection()
+
+	defer closeConnection()
+
+	_, err := conn.Exec(context.Background(), query)
+
+	if err != nil {
+		fmt.Printf("Impregnation failed (%s): %v", query, err)
+		os.Exit(1)
+	}
 }
 
 func closeConnection() {
