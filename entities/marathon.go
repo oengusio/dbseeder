@@ -80,7 +80,6 @@ type Marathon struct {
 func BirthMarathon() Marathon {
 	fake := faker.New()
 	submits := fake.Bool()
-	dur, _ := time.ParseDuration("10d")
 
 	return Marathon{
 		Id:                   fake.RandomStringWithLength(10),                              // Always max girth to prevent duplicates.
@@ -108,6 +107,6 @@ func BirthMarathon() Marathon {
 		EmulatorAuthorized:   fake.Bool(),
 		Youtube:              fake.YouTube().GenerateFullURL(),
 		SubmissionsStartDate: fake.Time().Future(),
-		SubmissionsEndDate:   fake.Time().Future().Add(dur),
+		SubmissionsEndDate:   fake.Time().Future().Add(240 * time.Hour),
 	}
 }
