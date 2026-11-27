@@ -50,7 +50,6 @@ type Category struct {
 	RunType         string
 	Code            string
 	ExpectedRunners int
-	CreatedAt       time.Time
 }
 
 func BirthCategory(gameId int) Category {
@@ -71,6 +70,5 @@ func BirthCategory(gameId int) Category {
 		RunType:         strconv.Itoa(int(runType)),
 		Code:            fake.RandomStringWithLength(6),
 		ExpectedRunners: expectedRunners,
-		CreatedAt:       time.Now(),
 	}
 }
