@@ -114,6 +114,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				switch m.selected {
 				case "Marathons":
 					return m, views.SwitchToCmd(views.Marathon)
+				case "Submissions":
+					return m, views.SwitchToCmd(views.Submission)
 				}
 			}
 		}

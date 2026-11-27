@@ -24,6 +24,7 @@ import (
 	tea "charm.land/bubbletea/v2"
 	mainmenu "oengus.net/dbseeder/v2/menus/main"
 	marathonmenu "oengus.net/dbseeder/v2/menus/marathon"
+	submissionmenu "oengus.net/dbseeder/v2/menus/submission"
 	"oengus.net/dbseeder/v2/views"
 )
 
@@ -63,6 +64,8 @@ func (m RootView) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.ViewModel = marathonmenu.InitialModel()
 				break
 			case views.Submission:
+				m.ViewModel = submissionmenu.InitialModel()
+				break
 			case views.User:
 				break
 			}
