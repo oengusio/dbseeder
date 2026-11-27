@@ -57,6 +57,7 @@ func InitialModel() Model {
 	for i := range m.inputs {
 		t = textinput.New()
 		t.CharLimit = 32
+		t.SetWidth(32)
 
 		s := t.Styles()
 		s.Cursor.Color = lipgloss.Color("205")
