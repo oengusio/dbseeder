@@ -35,19 +35,16 @@ func SquirtSubmission(submission entities.Submission) int {
 	query := `
 INSERT INTO submission (user_id, marathon_id)
 VALUES ($1, $2)
-RETURNING id
+RETURNING id;
 `
 
-	row, err := conn.Query(context.Background(), query, submission.UserId, submission.MarathonId)
-
-	if err != nil {
-		fmt.Printf("Impregnation of submission failed (%s): %v", query, err)
-		os.Exit(1)
-	}
+	row := conn.QueryRow(context.Background(), query, submission.UserId, submission.MarathonId)
 
 	var submissionId int
 
 	row.Scan(&submissionId)
+
+	fmt.Println("submission stored in db", submissionId)
 
 	return submissionId
 }
@@ -59,10 +56,10 @@ func SquirtGame(game entities.Game) int {
 	query := `
 INSERT INTO game(submission_id, name, description, console, ratio, emulated)
 VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING id
+RETURNING id;
 `
 
-	row, err := conn.Query(
+	row := conn.QueryRow(
 		context.Background(),
 		query,
 		game.SubmissionId,
@@ -72,11 +69,6 @@ RETURNING id
 		game.Ratio,
 		game.Emulated,
 	)
-
-	if err != nil {
-		fmt.Printf("Impregnation of game failed (%s): %v", query, err)
-		os.Exit(1)
-	}
 
 	var gameId int
 
@@ -112,4 +104,8 @@ VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now())`
 		fmt.Printf("Impregnation of category failed (%s) (%v): %v", query, category, err)
 		os.Exit(1)
 	}
+}
+
+func Aftercare() {
+	defer closeConnection()
 }

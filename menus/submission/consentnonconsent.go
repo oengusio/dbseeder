@@ -29,6 +29,7 @@ import (
 func cncSubmissions(marathonId string, userId int) {
 	fake := faker.New()
 
+	// duncte you idiot, users have a single submission per marathon
 	subCount := fake.IntBetween(2, 6)
 
 	for range subCount {
@@ -47,4 +48,6 @@ func cncSubmissions(marathonId string, userId int) {
 			database.SquirtCategory(category)
 		}
 	}
+
+	database.Aftercare()
 }
