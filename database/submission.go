@@ -82,6 +82,8 @@ RETURNING id
 
 	row.Scan(&gameId)
 
+	fmt.Println("Game stored in db", gameId)
+
 	return gameId
 }
 
@@ -93,20 +95,21 @@ func SquirtCategory(category entities.Category) {
 INSERT INTO category(game_id, name, estimate, description, video, run_type, code, expected_runners, created_at)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, now())`
 
-    _, err := conn.Exec(
-        context.Background(),
-        query,
-        category.GameId,
-        category.Name,
-        category.Estimate,
-        category.Description,
-        category.RunType,
-        category.Code,
-        category.ExpectedRunners,
-    )
+	_, err := conn.Exec(
+		context.Background(),
+		query,
+		category.GameId,
+		category.Name,
+		category.Estimate,
+		category.Description,
+		category.Video,
+		category.RunType,
+		category.Code,
+		category.ExpectedRunners,
+	)
 
-    if err != nil {
-        fmt.Printf("Impregnation of category failed (%s): %v", query, err)
-        os.Exit(1)
-    }
+	if err != nil {
+		fmt.Printf("Impregnation of category failed (%s) (%v): %v", query, category, err)
+		os.Exit(1)
+	}
 }

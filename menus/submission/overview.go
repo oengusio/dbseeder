@@ -22,6 +22,7 @@ package submissionmenu
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"charm.land/bubbles/v2/cursor"
@@ -95,18 +96,18 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyPressMsg:
 		switch msg.String() {
 		// Change cursor mode
-		case "ctrl+r":
-			m.cursorMode++
-			if m.cursorMode > cursor.CursorHide {
-				m.cursorMode = cursor.CursorBlink
-			}
-			cmds := make([]tea.Cmd, len(m.inputs))
-			for i := range m.inputs {
-				s := m.inputs[i].Styles()
-				s.Cursor.Blink = m.cursorMode == cursor.CursorBlink
-				m.inputs[i].SetStyles(s)
-			}
-			return m, tea.Batch(cmds...)
+		/*case "ctrl+r":
+		  m.cursorMode++
+		  if m.cursorMode > cursor.CursorHide {
+		  	m.cursorMode = cursor.CursorBlink
+		  }
+		  cmds := make([]tea.Cmd, len(m.inputs))
+		  for i := range m.inputs {
+		  	s := m.inputs[i].Styles()
+		  	s.Cursor.Blink = m.cursorMode == cursor.CursorBlink
+		  	m.inputs[i].SetStyles(s)
+		  }
+		  return m, tea.Batch(cmds...)*/
 
 		// Set focus to next input
 		case "tab", "shift+tab", "enter", "up", "down":
@@ -114,6 +115,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 			if s == "enter" && m.focusIndex == len(m.inputs) {
 				// TODO: make stuff
+				userId, _ := strconv.Atoi(m.inputs[0].Value())
+				marathonId := m.inputs[1].Value()
+
+				cncSubmissions(marathonId, userId)
+
 				return m, tea.Quit
 			}
 
