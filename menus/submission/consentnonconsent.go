@@ -21,6 +21,8 @@
 package submissionmenu
 
 import (
+	"fmt"
+
 	"github.com/jaswdr/faker/v2"
 	"oengus.net/dbseeder/v2/database"
 	"oengus.net/dbseeder/v2/entities"
@@ -29,20 +31,23 @@ import (
 func cncSubmissions(marathonId string, userId int) {
 	fake := faker.New()
 
-	// duncte you idiot, users have a single submission per marathon
-	subCount := fake.IntBetween(2, 6)
+	submission := entities.BirthSubmission(userId, marathonId)
 
-	for range subCount {
-		submission := entities.BirthSubmission(userId, marathonId)
+	subId := database.SquirtSubmission(submission)
 
-		subId := database.SquirtSubmission(submission)
+	if subId < 1 {
+		fmt.Println("Layer 8 problem, more than one submission")
+		return
+	}
 
-		//gameCount := fake.IntBetween(2, 6)
-		games := entities.BirthGames(subId)
+	//gameCount := fake.IntBetween(2, 6)
+	games := entities.BirthGames(subId)
 
-		for _, g := range games {
-			gameId := database.SquirtGame(g)
+	for _, g := range games {
+		gameId := database.SquirtGame(g)
+		categoryCount := fake.IntBetween(2, 6)
 
+		for range categoryCount {
 			category := entities.BirthCategory(gameId)
 
 			database.SquirtCategory(category)

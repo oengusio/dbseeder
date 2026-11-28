@@ -31,6 +31,7 @@ import (
 	"charm.land/lipgloss/v2"
 )
 
+// TODO: option to make new marathon per submission?
 var (
 	focusedStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
 	blurredStyle        = lipgloss.NewStyle().Foreground(lipgloss.Color("240"))
